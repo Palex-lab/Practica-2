@@ -1,61 +1,85 @@
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
-public class MySocket extends Socket {
+public class MySocket {
+   //declaración de atributos
+   BufferedReader bf;
+   PrintWriter pw;
+   String nickname;
+   Socket socket;
 
-    Socket socket;
-    BufferedReader bufRe;
-    PrintWriter prW;
-
-    public MySocket(String host, int port) {
+   // declaración de constructor
+    public MySocket (String nickname, String host, int port) {
         try {
-            this.socket = new Socket(host, port);
-            this.bufRe = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.prW = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
-            Logger.getLogger(MySocket.class.getName()).log(Level.SEVERE, null, e);
+            socket = new Socket(host, port);
+            bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+        } catch (Exception e) {
+        e.printStackTrace();
         }
     }
 
-    public MySocket(Socket socket){
-        this.socket = socket;
-        try {
-            this.bufRe = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.prW = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
-            Logger.getLogger(MySocket.class.getName()).log(Level.SEVERE, null, e);
-        }
-    }
 
-    public void println(String s){
-        this.prW.println(s);
-        this.prW.flush();
-    }
-
-    public String readLine(){
+   
+  //declaración de métodos
+    public int read() {
         try {
-            return this.bufRe.readLine();
+            return bf.read();
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return -1;
         }
+    }
+    public void write(String s) {
+        pw.write(s);
+    }
+    public void close() {
+        try {
+            this.pw.close();
+            this.bf.close();
+            this.socket.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    public String readLine() {
+        String s = null;
+        try {
+            s = this.bf.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 
-    public void close(){
-        try {
-            this.bufRe.close();
-            this.prW.close();
-            this.socket.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    public void writeLine(String s) {
+        this.pw.write(s);
     }
+    
+    public Socket getSocket() {
+        return this.socket;
+    }
+    
+    public void sendUsername() {
+        this.pw.println(this.nickname);
+        System.out.println("Nickname sent is: " + this.nickname);
+    }
+    
+    public String receiveNickname() {
+        return this.readLine();
+    }
+    public String setNickname() {
+        this.nickname = this.readLine();
+        return this.nickname;
+     }
+
+  
 }
+  
