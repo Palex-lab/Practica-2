@@ -1,19 +1,22 @@
+package Sockets;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 
 public class MySocket {
-   //declaració d'atributs
+   //declaración de atributos
    BufferedReader bf;
    PrintWriter pw;
    String nickname;
    Socket socket;
 
-   // declaració del constructor
+   // declaración de constructor
     public MySocket (String nickname, String host, int port) {
         try {
             socket = new Socket(host, port);
@@ -25,7 +28,19 @@ public class MySocket {
         }
     }
 
-  //declaració dels mètodes
+    public MySocket(Socket s) {
+        try {
+            socket = s;
+            bf = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+            pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+   
+  //declaración de métodos
     public int read() {
         try {
             return bf.read();
