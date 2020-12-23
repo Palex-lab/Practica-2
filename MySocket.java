@@ -7,13 +7,13 @@ import java.net.Socket;
 
 
 public class MySocket {
-   //declaración de atributos
+   //declaració d'atributs
    BufferedReader bf;
    PrintWriter pw;
    String nickname;
    Socket socket;
 
-   // declaración de constructor
+   // declaració del constructor
     public MySocket (String nickname, String host, int port) {
         try {
             socket = new Socket(host, port);
@@ -25,9 +25,7 @@ public class MySocket {
         }
     }
 
-
-   
-  //declaración de métodos
+  //declaració dels mètodes
     public int read() {
         try {
             return bf.read();
